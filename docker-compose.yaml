@@ -4,12 +4,13 @@
       image: wordpress:7.0-php8.2-fpm-alpine
       restart: always
       depends_on:
-        - db
+        db:
+          condition: service_healthy
       environment:
         WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-        WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-        WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-        WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+        WORDPRESS_DB_USER: ${MYSQL_USER}
+        WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+        WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
       volumes:
         - wordpress:/var/www/html
       networks:
@@ -24,8 +25,12 @@
         MYSQL_DATABASE: ${MYSQL_DATABASE}
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
       volumes:
-        # - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
         - db:/var/lib/mysql
       networks:
         - default
