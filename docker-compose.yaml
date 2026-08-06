@@ -49,6 +49,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - wordpress:/var/www/html
+      - grafana-storage:/var/lib/grafana
     depends_on:
       - wordpress
     networks:
@@ -96,8 +97,8 @@ services:
     image: grafana/grafana-enterprise
     container_name: grafana
     restart: unless-stopped
-    ports:
-      - '3000:3000'
+    expose: 
+      - 3000
     volumes:
       - ./datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
       - ./grafana.ini:/etc/grafana/grafana.ini:ro
