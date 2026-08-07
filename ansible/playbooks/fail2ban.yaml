@@ -2,7 +2,7 @@
   ansible.builtin.apt:
     name: fail2ban
     state: present
-  update_cache: yes
+    update_cache: yes
 
 - name: Ensure fail2ban is running and enabled
   ansible.builtin.service:
@@ -12,8 +12,9 @@
 
 - name: Deploy jail.local configuration
   copy:
-    src: opt/test/jail.local
+    src: /opt/test/jail.local
     dest: /etc/fail2ban/jail.local
+    remote_src: yes
     owner: root
     group: root
     mode: '0644'

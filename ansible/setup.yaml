@@ -17,4 +17,4 @@
       include_tasks: playbooks/repo.yaml
     
     - name: Download and configure fail2ban
-      include_tasks: playbooks/fail2ban.yamlS
+      include_tasks: playbooks/fail2ban.yaml

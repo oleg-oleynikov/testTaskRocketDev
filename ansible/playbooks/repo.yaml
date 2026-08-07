@@ -3,7 +3,8 @@
     repo: 'https://github.com/oleg-oleynikov/testTaskRocketDev'
     dest: /opt/test
     version: main
-    update: yes
+    update: true
+    force: true
 
 
 
