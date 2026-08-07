@@ -1,0 +1,10 @@
+- name: Clone a git repository
+  ansible.builtin.git:
+    repo: 'https://github.com/oleg-oleynikov/testTaskRocketDev'
+    dest: /opt/test
+    version: main
+    update: yes
+
+
+
+
