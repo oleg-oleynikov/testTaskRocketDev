@@ -11,10 +11,9 @@
     enabled: yes
 
 - name: Deploy jail.local configuration
-  copy:
-    src: /opt/test/jail.local
+  template:
+    src: jail.local.j2
     dest: /etc/fail2ban/jail.local
-    remote_src: yes
     owner: root
     group: root
     mode: '0644'
