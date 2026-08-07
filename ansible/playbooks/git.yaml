@@ -1,0 +1,9 @@
+- name: Download Git
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Ensure Git is installed on the target machine
+      ansible.builtin.package:
+        name: git
+        state: present

@@ -1,0 +1,13 @@
+- name: Configure all servers
+  hosts: localhost
+  become: true
+  
+  tasks:
+    - name: Include Git setup
+      import_playbook: playbooks/git.yml
+      when: install_git | default(true)
+    
+    - name: Include Docker setup
+      import_playbook: playbooks/docker.yml
+    
+    
