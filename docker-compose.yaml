@@ -94,7 +94,7 @@ services:
       - monitoring
 
   grafana:
-    image: grafana/grafana-enterprise
+    image: grafana/grafana
     container_name: grafana
     restart: unless-stopped
     expose: 

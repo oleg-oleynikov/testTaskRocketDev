@@ -1,17 +1,50 @@
-name: Validate Docker Compose
+name: Docker Compose CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  validate:
+  compose-up:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Validate Docker Compose Configuration
+      - name: Create .env
+        run: |
+          cat > .env <<EOF
+          WORDPRESS_DB_HOST=db:3306
+          MYSQL_ROOT_PASSWORD=rootpass
+          MYSQL_DATABASE=wordpress
+          MYSQL_USER=wpuser
+          MYSQL_PASSWORD=wppass
+          EOF
+
+      - name: Validate config
         run: docker compose config --quiet
+
+      - name: Start containers
+        run: docker compose up -d --build
+
+      - name: Wait for startup
+        run: sleep 30
+
+      - name: Check running status
+        run: |
+          docker compose ps
+          EXITED=$(docker compose ps -q --filter status=exited | wc -l)
+          if [ "$EXITED" -ne 0 ]; then
+            echo "Some containers exited!"
+            docker compose logs
+            exit 1
+          fi
+
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs --tail=200
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v --remove-orphans
