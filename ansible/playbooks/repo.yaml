@@ -1,7 +1,7 @@
 - name: Clone a git repository
   ansible.builtin.git:
     repo: 'https://github.com/oleg-oleynikov/testTaskRocketDev'
-    dest: /opt/test
+    dest: "{{ app_dir }}"
     version: main
     update: true
     force: true

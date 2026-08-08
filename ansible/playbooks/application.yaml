@@ -1,7 +1,30 @@
 - name: Create .env file
   template:
-      src: config.env.j2
-      dest: /opt/test/.env
-      owner: root
-      group: root
-      mode: '0644'
+    src: config.env.j2
+    dest: "{{ app_dir }}/.env"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Stop and remove old containers
+  community.docker.docker_compose_v2:
+    project_src: "{{ app_dir }}"
+    state: absent
+    remove_volumes: false
+    remove_orphans: true
+  ignore_errors: true
+  register: down_result
+
+- name: Show cleanup result
+  debug:
+    msg: "Old containers removed"
+  when: down_result.changed
+
+- name: Run docker compose up
+  community.docker.docker_compose_v2:
+    project_src: "{{ app_dir }}"
+    state: present
+    pull: always
+    remove_orphans: true
+    recreate: always
+    build: always
