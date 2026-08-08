@@ -12,12 +12,15 @@
 
     - name: Docker check exists
       include_tasks: playbooks/docker.yaml
-    
+        
+    - name: Download and configure fail2ban
+      include_tasks: playbooks/fail2ban.yaml
+
     - name: Clone git repository
       include_tasks: playbooks/repo.yaml
     
-    - name: Download and configure fail2ban
-      include_tasks: playbooks/fail2ban.yaml
+    - name: Issue SSL certificates
+      include_tasks: playbooks/cert.yaml
 
     - name: Start application
       include_tasks: playbooks/application.yaml

@@ -53,4 +53,3 @@ ansible-vault create group_vars/production/vault.yml
 ```bash
 ansible-playbook -i hosts.ini setup.yaml --ask-vault-pass
 ```
-Введите пароль от Ansible Vault при запросе.

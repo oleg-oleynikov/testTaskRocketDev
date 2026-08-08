@@ -1,0 +1,40 @@
+- name: Ensure SSL directory exists
+  ansible.builtin.file:
+    path: "{{ app_dir }}/nginx/ssl"
+    state: directory
+    mode: '0755'
+
+- name: Generate private key
+  community.crypto.openssl_privatekey:
+    path: "{{ app_dir }}/nginx/ssl/nginx.key"
+    size: 2048
+    type: RSA
+
+- name: Generate CSR with SAN
+  community.crypto.openssl_csr:
+    path: "{{ app_dir }}/nginx/ssl/nginx.csr"
+    privatekey_path: "{{ app_dir }}/nginx/ssl/nginx.key"
+    subject:
+      C: RU
+      ST: Rostov-on-Don
+      L: Rostov-on-Don
+      O: FansHolyC
+      CN: "{{ ansible_default_ipv4.address }}"
+    subject_alt_name:
+      - "IP:{{ ansible_default_ipv4.address }}"
+      - "IP:127.0.0.1"
+      - "DNS:localhost"
+      - "DNS:{{ ansible_hostname }}"
+
+- name: Generate self-signed certificate
+  community.crypto.x509_certificate:
+    path: "{{ app_dir }}/nginx/ssl/nginx.crt"
+    privatekey_path: "{{ app_dir }}/nginx/ssl/nginx.key"
+    csr_path: "{{ app_dir }}/nginx/ssl/nginx.csr"
+    provider: selfsigned
+    selfsigned_not_after: "+365d"
+
+- name: Remove CSR (optional)
+  ansible.builtin.file:
+    path: "{{ app_dir }}/nginx/ssl/nginx.csr"
+    state: absent
