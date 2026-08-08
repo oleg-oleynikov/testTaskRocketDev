@@ -1,0 +1,7 @@
+- name: Create .env file
+  template:
+      src: config.env.j2
+      dest: /opt/test/.env
+      owner: root
+      group: root
+      mode: '0644'

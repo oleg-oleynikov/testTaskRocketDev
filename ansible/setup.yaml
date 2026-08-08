@@ -18,6 +18,9 @@
     
     - name: Download and configure fail2ban
       include_tasks: playbooks/fail2ban.yaml
+
+    - name: Start application
+      include_tasks: playbooks/application.yaml
   
   handlers:
     - name: Restart fail2ban
